@@ -6,17 +6,19 @@ import classNames from 'classnames';
 import styles from './ArticleParamsForm.module.scss';
 
 export const ArticleParamsForm = () => {
-	const [open, setOpen] = useState(false);
+	const [status, setStatus] = useState('close');
 
-	const toggleAside = () => setOpen(true);
+	const toggleAside = () => {
+		status == 'close' ? setStatus('open') : setStatus('close');
+	};
 
 	return (
 		<>
-			<ArrowButton onClick={toggleAside} />
+			<ArrowButton onClick={toggleAside} asideStatus={status} />
 			<aside
 				className={classNames(
 					styles.container,
-					open ? styles.container_open : ''
+					status == 'open' ? styles.container_open : ''
 				)}>
 				<form className={styles.form}>
 					<div className={styles.bottomContainer}>
