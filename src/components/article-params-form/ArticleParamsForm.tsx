@@ -5,6 +5,8 @@ import { Select } from 'components/select';
 import { RadioGroup } from '../radio-group';
 import { Separator } from '../separator';
 
+import { useOutsideClickClose } from '../select/hooks/useOutsideClickClose';
+
 import {
 	fontFamilyOptions,
 	fontSizeOptions,
@@ -13,9 +15,10 @@ import {
 	contentWidthArr,
 	defaultArticleState,
 	ArticleStateType,
+	OptionType,
 } from 'src/constants/articleProps';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import classNames from 'classnames';
 
 import styles from './ArticleParamsForm.module.scss';
@@ -25,23 +28,24 @@ type ArticleParamsFormProps = {
 };
 
 export const ArticleParamsForm = ({ setPageState }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 
-	const [selectedFont, setSelectedFont] = useState(
+	const [selectedFont, setSelectedFont] = useState<OptionType>(
 		defaultArticleState.fontFamilyOption
 	);
-	const [selectedFontSize, setSelectedFontSize] = useState(
+	const [selectedFontSize, setSelectedFontSize] = useState<OptionType>(
 		defaultArticleState.fontSizeOption
 	);
-	const [selectedFontColor, setSelectedFontColor] = useState(
+	const [selectedFontColor, setSelectedFontColor] = useState<OptionType>(
 		defaultArticleState.fontColor
 	);
-	const [selectedBackgroundColor, setSelectedBackgroundColor] = useState(
-		defaultArticleState.backgroundColor
-	);
-	const [selectedContentWidth, setSelectedContentWidth] = useState(
+	const [selectedBackgroundColor, setSelectedBackgroundColor] =
+		useState<OptionType>(defaultArticleState.backgroundColor);
+	const [selectedContentWidth, setSelectedContentWidth] = useState<OptionType>(
 		defaultArticleState.contentWidth
 	);
+
+	const formElement = useRef<HTMLElement | null>(null);
 
 	const toggleIsOpen = () => {
 		isOpen ? setIsOpen(false) : setIsOpen(true);
@@ -62,10 +66,16 @@ export const ArticleParamsForm = ({ setPageState }: ArticleParamsFormProps) => {
 			fontFamilyOption: selectedFont,
 			fontColor: selectedFontColor,
 			backgroundColor: selectedBackgroundColor,
-			contentWidth: selectedBackgroundColor,
+			contentWidth: selectedContentWidth,
 			fontSizeOption: selectedFontSize,
 		});
 	};
+
+	useOutsideClickClose({
+		isOpen: isOpen,
+		rootRef: formElement,
+		onChange: setIsOpen,
+	});
 
 	return (
 		<>
@@ -74,7 +84,8 @@ export const ArticleParamsForm = ({ setPageState }: ArticleParamsFormProps) => {
 				className={classNames(
 					styles.container,
 					isOpen ? styles.container_open : ''
-				)}>
+				)}
+				ref={formElement}>
 				<form className={styles.form} onSubmit={onSubmit}>
 					<Text as={'h1'} size={31} weight={800} uppercase>
 						Задайте параметры
