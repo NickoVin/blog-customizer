@@ -12,6 +12,7 @@ import {
 	backgroundColors,
 	contentWidthArr,
 	defaultArticleState,
+	ArticleStateType,
 } from 'src/constants/articleProps';
 
 import { useState } from 'react';
@@ -19,7 +20,11 @@ import classNames from 'classnames';
 
 import styles from './ArticleParamsForm.module.scss';
 
-export const ArticleParamsForm = () => {
+type ArticleParamsFormProps = {
+	setPageState: (params: React.SetStateAction<ArticleStateType>) => void;
+};
+
+export const ArticleParamsForm = ({ setPageState }: ArticleParamsFormProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const [selectedFont, setSelectedFont] = useState(
@@ -42,6 +47,26 @@ export const ArticleParamsForm = () => {
 		isOpen ? setIsOpen(false) : setIsOpen(true);
 	};
 
+	const resetForm = () => {
+		setSelectedFont(defaultArticleState.fontFamilyOption);
+		setSelectedFontSize(defaultArticleState.fontSizeOption);
+		setSelectedFontColor(defaultArticleState.fontColor);
+		setSelectedBackgroundColor(defaultArticleState.backgroundColor);
+		setSelectedContentWidth(defaultArticleState.contentWidth);
+	};
+
+	const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		setPageState({
+			fontFamilyOption: selectedFont,
+			fontColor: selectedFontColor,
+			backgroundColor: selectedBackgroundColor,
+			contentWidth: selectedBackgroundColor,
+			fontSizeOption: selectedFontSize,
+		});
+	};
+
 	return (
 		<>
 			<ArrowButton onClick={toggleIsOpen} isOpen={isOpen} />
@@ -50,7 +75,7 @@ export const ArticleParamsForm = () => {
 					styles.container,
 					isOpen ? styles.container_open : ''
 				)}>
-				<form className={styles.form}>
+				<form className={styles.form} onSubmit={onSubmit}>
 					<Text as={'h1'} size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
@@ -87,7 +112,7 @@ export const ArticleParamsForm = () => {
 						title='ширина контента'
 					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='reset' />
+						<Button title='Сбросить' type='reset' onClick={resetForm} />
 						<Button title='Применить' type='submit' />
 					</div>
 				</form>
