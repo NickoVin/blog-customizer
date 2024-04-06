@@ -9,7 +9,7 @@ export type OnClick = () => void;
 
 type ArrowButtonProps = {
 	onClick: OnClick;
-	asideStatus: string;
+	isOpen: boolean;
 };
 
 export const ArrowButton = (props: ArrowButtonProps) => {
@@ -21,7 +21,7 @@ export const ArrowButton = (props: ArrowButtonProps) => {
 			tabIndex={0}
 			className={classNames(
 				styles.container,
-				props.asideStatus == 'open' ? styles.container_open : ''
+				props.isOpen ? styles.container_open : ''
 			)}
 			onClick={props.onClick}>
 			<img
@@ -29,7 +29,7 @@ export const ArrowButton = (props: ArrowButtonProps) => {
 				alt='иконка стрелочки'
 				className={classNames(
 					styles.arrow,
-					props.asideStatus == 'open' ? styles.arrow_open : ''
+					props.isOpen ? styles.arrow_open : ''
 				)}
 			/>
 		</div>

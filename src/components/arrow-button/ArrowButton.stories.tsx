@@ -15,7 +15,7 @@ export const ArrowButtonStory: Story = {
 			<>
 				<ArrowButton
 					onClick={() => console.log('On click message')}
-					asideStatus={'close'}
+					isOpen={false}
 				/>
 			</>
 		);
